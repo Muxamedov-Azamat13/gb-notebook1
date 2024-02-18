@@ -3,8 +3,12 @@ package notebook.view;
 import notebook.controller.UserController;
 import notebook.model.User;
 import notebook.util.Commands;
+import notebook.util.UserValidator;
 
 import java.util.Scanner;
+import java.util.Stack;
+
+import static notebook.model.repository.impl.UserRepository.createUser;
 
 public class UserView {
     private final UserController userController;
@@ -35,23 +39,22 @@ public class UserView {
                         throw new RuntimeException(e);
                     }
                     break;
+                case LIST:
+                    System.out.println(userController.readAll());
                 case UPDATE:
                     String userId = prompt("Enter user id: ");
                     userController.updateUser(userId, createUser());
+                case DELETE:
+                    String delUsers = prompt("Enter user id: ");
+                    userController.delete(delUsers);
             }
         }
     }
 
-    private String prompt(String message) {
+    public static String prompt(String message) {
         Scanner in = new Scanner(System.in);
         System.out.print(message);
         return in.nextLine();
     }
 
-    private User createUser() {
-        String firstName = prompt("Имя: ");
-        String lastName = prompt("Фамилия: ");
-        String phone = prompt("Номер телефона: ");
-        return new User(firstName, lastName, phone);
-    }
 }
